@@ -1,7 +1,10 @@
+// import ExpenseItem from "../components/ExpenseItem";
+
 export const GlobalStyles = {
   colors: {
-    mainColor: "khaki",
-    headerColor: "goldenrod",
-    secondryColor: "#bdbd42",
+    headerColor: "#ddb892",
+    backgroundColor: "#e6ccb2",
+    titleColor: "#ede0d4",
+    ExpenseItemColor: "#b08968",
   },
 };

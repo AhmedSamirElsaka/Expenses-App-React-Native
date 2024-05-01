@@ -9,37 +9,102 @@ import ManageExpenses from "./screens/ManageExpenses";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import RecentExpenses from "./screens/RecentExpenses";
 import TitleText from "./components/TitleText";
+import ExpenseItem from "./components/ExpenseItem";
+import ExpensesList from "./components/ExpensesList";
+// import
+import DUMMY_EXPENSES from "./store/expenses-context";
+import AllExpenses from "./screens/AllExpenses";
+import IconButton from "./components/IconButton";
+import { GlobalStyles } from "./constants/styles";
 const Stack = createNativeStackNavigator();
-const BottomNav = createBottomTabNavigator();
+const BottomTabsNav = createBottomTabNavigator();
 
-export default function App() {
-  function ExpensesOverView() {
-    return (
-      <BottomNav.Navigator
-        screenOptions={{ headerStyle: { backgroundColor: "black" } }}
-      >
-        <BottomNav.Screen />
-        <BottomNav.Screen />
-      </BottomNav.Navigator>
-    );
+function ExpensesOverView({ navigation }) {
+  function addNewExpenseHandler() {
+    navigation.navigate("ManageExpense", {
+      type: "add",
+    });
   }
   return (
-    // <NavigationContainer>
-    //   <Stack.Navigator
-    //     screenOptions={{
-    //       headerStyle: { backgroundColor: "goldenrod" },
-    //       contentStyle: { backgroundColor: "khaki" },
-    //     }}
-    //   >
-    //     <Stack.Screen component={ManageExpenses} name="manageExpenses" />
-    //     <Stack.Screen component={ExpensesOverView} name="ExpensesOverview" />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
+    <BottomTabsNav.Navigator
+      screenOptions={({ navigation }) => ({
+        headerStyle: { backgroundColor: GlobalStyles.colors.headerColor },
+        headerTintColor: "black",
+        tabBarStyle: {
+          backgroundColor: GlobalStyles.colors.headerColor,
+          padding: 8,
+        },
+        tabBarActiveTintColor: "black",
+        tabBarInactiveTintColor: "gray",
+        headerRight: ({ tintColor }) => (
+          <IconButton
+            name={"add"}
+            size={24}
+            color="black"
+            onPress={addNewExpenseHandler}
+          />
+        ),
+        headerRightContainerStyle: { padding: 8 },
+      })}
+    >
+      <BottomTabsNav.Screen
+        name="RecentExpenses"
+        component={RecentExpenses}
+        options={{
+          title: "Recent Expenses",
+          tabBarLabel: "Recent",
+          tabBarIcon: ({ color, size }) => (
+            <IconButton name="hourglass" size={size} color={color} />
+          ),
+        }}
+      />
+      <BottomTabsNav.Screen
+        name="AllExpenses"
+        component={AllExpenses}
+        options={{
+          title: "All Expenses",
+          tabBarLabel: "All Expenses",
+          tabBarIcon: ({ color, size }) => (
+            <IconButton name="calendar" size={size} color={color} />
+          ),
+        }}
+      />
+    </BottomTabsNav.Navigator>
+  );
+}
 
-    <View style={{ padding: 40 }}>
-      <TitleText rigtTxt={"hello"} leftTxt={"hello"} />
-      <ButtonItem color={"yellow"}>Add</ButtonItem>
-    </View>
+export default function App() {
+  return (
+    <>
+      <StatusBar style="dark" />
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: GlobalStyles.colors.headerColor,
+            },
+            contentStyle: {
+              backgroundColor: GlobalStyles.colors.backgroundColor,
+            },
+          }}
+        >
+          <Stack.Screen
+            component={ExpensesOverView}
+            name="ExpensesOverview"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="ManageExpense"
+            component={ManageExpenses}
+            options={{
+              presentation: "modal",
+              backgroundColor: GlobalStyles.colors.backgroundColor,
+              // headerBackground: GlobalStyles.colors.headerColor,
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
   );
 }
 

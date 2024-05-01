@@ -31,5 +31,6 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 8,
+    paddingHorizontal: 24,
   },
 });
