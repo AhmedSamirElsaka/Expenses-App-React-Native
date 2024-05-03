@@ -1,14 +1,17 @@
 import { FlatList, View } from "react-native";
 import ExpenseItem from "./ExpenseItem";
-import { getFormattedDate } from "../utils/date";
+import { getFormattedDate } from "../../utils/date";
 
 function ExpensesList({ items, navigation }) {
   function renderItems(itemsData) {
-    console.log(itemsData);
+    // console.log(itemsData);
+
+    // console.log(itemsData.item.id);
 
     function editExpenseHandler() {
       navigation.navigate("ManageExpense", {
         type: "edit",
+        expenseItemId: itemsData.item.id.toString(),
       });
     }
 

@@ -1,8 +1,8 @@
 const { View, Pressable, Text, StyleSheet } = require("react-native");
 
-function ButtonItem({ children, onPress, color }) {
+function ButtonItem({ children, onPress, color, newStyle, mode }) {
   return (
-    <View>
+    <View style={newStyle}>
       <Pressable
         android_ripple={{ color: "#ccc" }}
         onPress={onPress}
@@ -10,6 +10,7 @@ function ButtonItem({ children, onPress, color }) {
           styles.button,
           { backgroundColor: color },
           pressed ? styles.buttonPressed : null,
+          mode === "flat" ? styles.flat : null,
         ]}
         //   [
         //   ({ pressed }) => pressed && styles.buttonPressed,
@@ -17,7 +18,7 @@ function ButtonItem({ children, onPress, color }) {
         //   ]
         // }
       >
-        <Text>{children}</Text>
+        <Text style={{ textAlign: "center" }}>{children}</Text>
       </Pressable>
     </View>
   );
@@ -32,5 +33,8 @@ const styles = StyleSheet.create({
   button: {
     padding: 8,
     paddingHorizontal: 24,
+  },
+  flat: {
+    backgroundColor: "transparent",
   },
 });

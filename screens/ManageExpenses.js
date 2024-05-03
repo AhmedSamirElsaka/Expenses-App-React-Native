@@ -1,12 +1,20 @@
 import { View, Text, StyleSheet } from "react-native";
 import { GlobalStyles } from "../constants/styles";
 import { useRoute } from "@react-navigation/native";
-import ButtonItem from "../components/ButtonItem";
-import IconButton from "../components/IconButton";
-import { useLayoutEffect } from "react";
+import IconButton from "../components/UI/IconButton";
+import { useContext, useLayoutEffect, useState } from "react";
+import { ExpensesContext } from "../store/expenses-context";
+import ExpenseForm from "../components/ManagaeExpense/ExpenseForm";
 function ManageExpenses({ navigation }) {
   const routed = useRoute();
   const type = routed.params.type;
+  const managedItemId = routed.params.expenseItemId;
+
+  const expensesCtx = useContext(ExpensesContext);
+
+  const selectedExpense = expensesCtx.expenses.find(
+    (expense) => expense.id === managedItemId
+  );
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -18,40 +26,75 @@ function ManageExpenses({ navigation }) {
     navigation.goBack();
   }
 
-  if (type === "edit") {
-    return (
-      <View style={styles.outerContainer}>
-        <View
-          style={[
-            styles.innerContainer,
-            {
-              borderBottomColor: GlobalStyles.colors.ExpenseItemColor,
-              borderBottomWidth: 2,
-            },
-          ]}
-        >
-          <ButtonItem color={"goldenrod"} onPress={cancelHandler}>
-            Cancel
-          </ButtonItem>
-          <ButtonItem color={"goldenrod"}>Update</ButtonItem>
-        </View>
-        <View style={styles.deleteIcon}>
-          <IconButton name={"trash"} size={24} color={"red"} />
-        </View>
-      </View>
-    );
-  } else {
-    return (
-      <View style={styles.outerContainer}>
-        <View style={styles.innerContainer}>
-          <ButtonItem color={"goldenrod"} onPress={cancelHandler}>
-            Cancel
-          </ButtonItem>
-          <ButtonItem color={"goldenrod"}>Add</ButtonItem>
-        </View>
-      </View>
-    );
+  // function confirmHandler() {
+  //   type === "edit"
+  //     ? expensesCtx.updateExpense(editedExpenseId, {
+  //         description: "Test!!!!",
+  //         amount: 29.99,
+  //         date: new Date("2022-05-20"),
+  //       })
+  //     : expensesCtx.addExpense({
+  //         description: "Test",
+  //         amount: 19.99,
+  //         date: new Date("2022-05-19"),
+  //       });
+  //   navigation.goBack();
+  // }
+
+  function confirmHandler(expenseData) {
+    type === "edit"
+      ? expensesCtx.updateExpense(managedItemId, expenseData)
+      : expensesCtx.addExpense(expenseData);
+
+    navigation.goBack();
   }
+
+  function deleteExpenseHandler() {
+    expensesCtx.deleteExpense(managedItemId);
+    navigation.goBack();
+  }
+
+  return (
+    <View style={styles.outerContainer}>
+      <ExpenseForm
+        submitButtonLabel={type === "edit" ? "Update" : "Add"}
+        onSubmit={confirmHandler}
+        onCancel={cancelHandler}
+        defaultValues={selectedExpense}
+      />
+      {type === "edit" ? (
+        <View style={styles.deleteIcon}>
+          <IconButton
+            name={"trash"}
+            size={36}
+            color={"red"}
+            onPress={deleteExpenseHandler}
+          />
+        </View>
+      ) : null}
+    </View>
+  );
+  // return type === "edit" ? (
+  //   <View style={styles.outerContainer}>
+  //     <ExpenseForm submitButtonLabel={"Update"} onSubmit={confirmHandler} />
+  //     <View style={styles.deleteIcon}>
+  //       <IconButton
+  //         name={"trash"}
+  //         size={36}
+  //         color={"red"}
+  //         onPress={deleteExpenseHandler}
+  //       />
+  //     </View>
+  //   </View>
+  // ) : (
+  //   <View style={styles.outerContainer}>
+  //     <ExpenseForm
+  //       onCancel={cancelHandler}
+  //       submitButtonLabel={"Add"}
+  //       onSubmit={confirmHandler}
+  //     />
+  //   </View>
+  // );
 }
 
 export default ManageExpenses;
@@ -63,14 +106,23 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flexDirection: "row",
-    width: "75%",
-    justifyContent: "space-around",
+    width: "100%",
     marginTop: 24,
+    justifyContent: "center",
     paddingBottom: 16,
     // marginHorizontal: 50,
     // backgroundColor: GlobalStyles.colors.backgroundColor,
   },
   deleteIcon: {
-    marginTop: 8,
+    width: "75%",
+    alignItems: "center",
+    paddingTop: 8,
+    borderTopColor: GlobalStyles.colors.ExpenseItemColor,
+    borderTopWidth: 2,
+  },
+  buttonStyle: {
+    minWidth: 120,
+    marginHorizontal: 8,
+    // alignItems: "center",
   },
 });

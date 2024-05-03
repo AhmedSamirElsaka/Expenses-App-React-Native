@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet } from "react-native";
-import { GlobalStyles } from "../constants/styles";
+import { GlobalStyles } from "../../constants/styles";
 
-function TitleText({ leftTxt, rigtTxt }) {
+function TitleText({ leftTxt, rightTxt }) {
   return (
     <View style={styles.container}>
       <Text style={styles.leftTxt}>{leftTxt}</Text>
-      <Text style={styles.rigtTxt}>{rigtTxt}</Text>
+      <Text style={styles.rightTxt}>{rightTxt}</Text>
     </View>
   );
 }
@@ -20,12 +20,14 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 6,
     marginHorizontal: 24,
-    alignItems: "center",
+    // alignItems: "center",
   },
-  leftTxt: { fontSize: 12, color: "black" },
-  rigtTxt: {
+  leftTxt: { fontSize: 12, color: "black", flex: 1 },
+  rightTxt: {
+    flex: 1,
     fontWeight: "bold",
     fontSize: 16,
     color: "black",
+    textAlign: "right",
   },
 });
